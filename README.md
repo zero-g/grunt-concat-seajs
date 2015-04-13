@@ -1,6 +1,6 @@
 # grunt-concat-seajs
 
-> If you combine a seajs project file, this task can be used with the seajs module to load the corresponding
+> If you combine a seajs project file, this task can be used with the seajs module to load the corresponding.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -27,57 +27,36 @@ grunt.initConfig({
   concat_seajs: {
     options: {
       // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
+    }
   },
 });
 ```
 
 ### Options
 
-#### options.separator
+#### options.view_src
 Type: `String`
-Default value: `',  '`
 
-A string value that is used to do something with whatever.
+The path of the view which contain seajs file is used to insert the concat math file of seajs.
 
-#### options.punctuation
+#### options.seajs_src
 Type: `String`
-Default value: `'.'`
 
-A string value that is used to do something else with whatever else.
+The path of seajs file is used to be the path of the match file.
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  concat_seajs: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example, custom options are used to do something else with whatever else. 
+So if the `concat` config concat the files and `filerev` make files md5, the generated result would be genarate a match file in `seajs_src`. At the same time, the match file would be insert to the `view_src`.  
 
 ```js
 grunt.initConfig({
   concat_seajs: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
+          seajs_src: 'js/lib/',
+          view_src: '../views/index.php'
+    }
   },
 });
 ```
