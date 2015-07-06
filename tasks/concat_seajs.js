@@ -1,4 +1,4 @@
-/*
+  /*
  * grunt-concat-seajs
  * https://github.com/zero-g/grunt-concat-seajs
  *
@@ -122,6 +122,9 @@ module.exports = function(grunt) {
 
     var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
     var m = code.match(seajsReg);
+    if(!m) {
+        return;
+    }
     var seaScript = m[0];
     var fetchScript = seaScript.replace(m[1], mapFileName);
     code = code.replace(seaScript, seaScript + '\n' + fetchScript);
