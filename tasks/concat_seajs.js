@@ -40,7 +40,7 @@ module.exports = function(grunt) {
               console.log(file);
                //append map file to the view file where seajs is
               appendMapFileToView(file, mapFileName);
-              grunt.log.writeln('append fetch file to：', viewSrc);
+              grunt.log.writeln('append fetch file to：', mapFileName);
           });
       });
 
