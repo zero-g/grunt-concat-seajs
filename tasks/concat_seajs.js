@@ -17,32 +17,35 @@ module.exports = function(grunt) {
     var profile = '支持 指定的seajs模块化文件的合并';
     grunt.registerMultiTask('concat_seajs', profile, function() {
         var options = this.options({
-            map_file_name: 'fetch.js'
+            map_file_name: 'fetch.js',
+            seajs_src: '',
+            baseDir: '',
+            externalFile: false //选择生成js文件，还是嵌入到html
         });
-        if (!options.seajs_src) {
-            grunt.log.warn('seajs_src  has not configured');
-            return;
-        }
-        var mapFileSrc = path.join(options.seajs_src, options.map_file_name);
-        var mapFileName = options.map_file_name;
-        createMapFile(mapFileSrc, options.baseDir); //general
-        grunt.log.writeln('build map file for seajs concat project', mapFileSrc);
-        if (grunt.filerev && grunt.filerev.summary) {
-            mapFileName = md5File(mapFileSrc);
-            grunt.log.writeln('map file for md5：', mapFileName);
-        }
 
-        this.files.forEach(function(filePair) {
-            filePair.src.forEach(function(file) {
-                //append map file to the view file where seajs is
-                appendMapFileToView(file, mapFileName);
+        var mapFileSrc = path.join(options.seajs_src, options.map_file_name); //生成map文件的路径
+        var code = createMapFile(mapFileSrc, options.baseDir); //general
+
+        if(options.externalFile === true) {
+            grunt.file.write(mapFileSrc, code);
+            var mapFileMd5Name = md5File(mapFileSrc);
+            grunt.log.writeln('map file for md5：', mapFileMd5Name);
+
+            this.files.forEach(function(filePair) {
+                filePair.src.forEach(function(file) {
+                    appendMapFileToView(file, mapFileMd5Name);
+                });
             });
-        });
-
+        } else {
+            this.files.forEach(function(filePair) {
+                filePair.src.forEach(function(file) {
+                    appendMapSourceToView(file, code);
+                });
+            });
+        }
     });
 
     function md5File(file) {
-
         var MD5_LENGTH = 8; //set hash length, todo be the filerev md5 length config
         var hash = crypto.createHash('md5').update(fs.readFileSync(file)).digest('hex');
         var suffix = hash.slice(0, MD5_LENGTH);
@@ -55,10 +58,23 @@ module.exports = function(grunt) {
         return newName;
     }
 
-    function appendMapFileToView(viewSrc, mapFileName) {
-        if(viewSrc === 'build/cart/index.php') {
+    function appendMapSourceToView(viewSrc, source) {
+        var code = grunt.file.read(viewSrc);
 
+        var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
+        var m = code.match(seajsReg);
+        if (!m) {
+            return;
         }
+        var seaScript = m[0];
+        var fetchScript = '<script>' + source + '</script>';
+        code = code.replace(seaScript, seaScript + '\n' + fetchScript);
+
+        grunt.file.write(viewSrc, code);
+        grunt.log.writeln('append fetch source to：', viewSrc);
+    }
+
+    function appendMapFileToView(viewSrc, mapFileName) {
         var code = grunt.file.read(viewSrc);
 
         var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
@@ -74,15 +90,12 @@ module.exports = function(grunt) {
         grunt.log.writeln('append fetch file to：', viewSrc);
     }
 
-    function createMapFile(mapFileSrc, baseDir) {
-        var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
-
-        //获取任务配置
-        var filesMatch = getConcatFilesMatch();
+    function createMapFile(baseDir) {
+        var filesMatch = getConcatFilesMatch(); //获取合并文件的md5映射表
+        filesMatch = resolvePath(filesMatch, baseDir); //更正路径
 
         //生成map_file_name文件
-        var code = createMapCode(resovePath(filesMatch, baseDir));
-        grunt.file.write(mapFileSrc, code);
+        var code = createMapCode(filesMatch);
         return code;
 
         function getConcatFilesMatch() {
@@ -142,7 +155,7 @@ module.exports = function(grunt) {
 
             return concFilesMath;
         }
-        function resovePath(concFilesMath, baseDir) {
+        function resolvePath(concFilesMath, baseDir) {
             var resultMap = {};
             baseDir = path.normalize(baseDir);
             for (var src in concFilesMath) {
@@ -152,7 +165,7 @@ module.exports = function(grunt) {
             return resultMap;
         }
         function createMapCode(concFilesMath) {
-
+            var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
             var code = FETCH_TEMPLATE.replace('concFilesMath', JSON.stringify(concFilesMath));
             return code;
         }
