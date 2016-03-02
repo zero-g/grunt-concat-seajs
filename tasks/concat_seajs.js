@@ -165,7 +165,8 @@ module.exports = function(grunt) {
             return resultMap;
         }
         function createMapCode(concFilesMath) {
-            var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
+            //var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
+            var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tvar mod=data.uri.replace(seajs.data.base,"");\n' + '\tdata.requestUri = data.uri.replace(mod, cfm[mod]);\n'  + '});';
             var code = FETCH_TEMPLATE.replace('concFilesMath', JSON.stringify(concFilesMath));
             return code;
         }
