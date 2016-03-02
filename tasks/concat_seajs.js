@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         });
 
         var mapFileSrc = path.join(options.seajs_src, options.map_file_name); //生成map文件的路径
-        var code = createMapFile(mapFileSrc, options.baseDir); //general
+        var code = createMapFile(options.baseDir); //general
 
         if(options.externalFile === true) {
             grunt.file.write(mapFileSrc, code);
@@ -148,7 +148,9 @@ module.exports = function(grunt) {
                         concFilesMath[src] = summary[concFilesMath[absuluteSrc]];
                         delete concFilesMath[absuluteSrc];
                     } else {
-                        concFilesMath[src] = summary[src];
+                        if(/\.js$/.test(src)) {
+                            concFilesMath[src] = summary[src];
+                        }
                     }
                 }
             }
