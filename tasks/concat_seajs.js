@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         });
 
         var mapFileSrc = path.join(options.seajs_src, options.map_file_name); //生成map文件的路径
-        var code = createMapFile(mapFileSrc, options.baseDir); //general
+        var code = createMapFile(options.baseDir); //general
 
         if(options.externalFile === true) {
             grunt.file.write(mapFileSrc, code);
@@ -61,7 +61,7 @@ module.exports = function(grunt) {
     function appendMapSourceToView(viewSrc, source) {
         var code = grunt.file.read(viewSrc);
 
-        var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
@@ -77,7 +77,7 @@ module.exports = function(grunt) {
     function appendMapFileToView(viewSrc, mapFileName) {
         var code = grunt.file.read(viewSrc);
 
-        var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;

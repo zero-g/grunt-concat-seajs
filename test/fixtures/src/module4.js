@@ -5,7 +5,7 @@ module1.js/**
 define(function(require, exports, module) {
     var container = document.getElementById('main'),
         divNode = document.createElement('p'),
-        textNode = document.createTextNode('module1 loaded.');
+        textNode = document.createTextNode('module4 loaded.');
 
     divNode.appendChild(textNode);
     container.appendChild(divNode);

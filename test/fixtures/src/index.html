@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>concat_seajs test page</title>
+    <style>
+        #main {
+            border: dashed 2px #ccc;
+            padding: 10px;
+        }
+        #main p {
+            border: dashed 1px red;
+            padding: 30px;
+            font-size: 30px;
+            height: 100px;
+            line-height: 100px;
+        }
+    </style>
 </head>
 <body>
-
+    <div id="main"></div>
 </body>
+<script src="sea.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    seajs.config({
+        base: '.',
+        charset : 'utf-8'
+    });
+    seajs.use(['index'],function(){
+
+    })
+</script>
 </html>

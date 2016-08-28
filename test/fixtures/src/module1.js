@@ -3,9 +3,11 @@
  */
 
 define(function(require, exports, module) {
-    var module1 = require('./module1'),
-        module2 = require('./module2'),
-        module3 = require('./module3'),
-        module4 = require('./module4'),
+    var container = document.getElementById('main'),
+        divNode = document.createElement('p'),
+        textNode = document.createTextNode('module1 loaded.');
+
+    divNode.appendChild(textNode);
+    container.appendChild(divNode);
     console.log('loaded!');
 });
