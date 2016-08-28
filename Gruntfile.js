@@ -60,8 +60,9 @@ module.exports = function(grunt) {
       options: {
         baseDir: config.releaseDir + '/',
         seajs_src: config.releaseDir + '/',
-        map_file_name: 'fetch.js',
-        externalFile: false //选择生成js文件，还是嵌入到html
+        //map_file_name: 'fetch.js',
+        injectFetch: true, //选择生成js文件，还是嵌入到html
+        injectSea: true //选择生成js文件，还是嵌入到html
       },
       main: {
         files: [{
@@ -70,22 +71,6 @@ module.exports = function(grunt) {
           src: ['**/*.html']
         }]
       }
-      //default_options: {
-      //  options: {
-      //  },
-      //  files: {
-      //    'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-      //  }
-      //},
-      //custom_options: {
-      //  options: {
-      //    separator: ': ',
-      //    punctuation: ' !!!'
-      //  },
-      //  files: {
-      //    'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
-      //  }
-      //}
     },
 
     // Unit tests.
