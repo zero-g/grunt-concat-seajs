@@ -1,4 +1,4 @@
-module1.js/**
+/**
  * Created by shaokaiming on 16/8/28.
  */
 
