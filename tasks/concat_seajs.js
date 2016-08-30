@@ -19,27 +19,29 @@ module.exports = function(grunt) {
         var options = this.options({
             map_file_name: 'fetch.js',
             seajs_src: '',
+            cdnBase: '',
             baseDir: '',
-            externalFile: false //选择生成js文件，还是嵌入到html
+            injectFetch: false, //fetch文件引入方式:1.true 将fetch代码注入到页面中 , 2.false 将fetch代码生成外部js进行引用
+            injectSea: false //seajs文件引入方式:1.true 将sea代码注入到页面中 , 2.false 外部js引用
         });
 
         var mapFileSrc = path.join(options.seajs_src, options.map_file_name); //生成map文件的路径
         var code = createMapFile(options.baseDir); //general
 
-        if(options.externalFile === true) {
+        if(options.injectFetch === true) {
+            this.files.forEach(function(filePair) {
+                filePair.src.forEach(function(file) {
+                    appendMapSourceToView(file, code,options.injectSea,options.cdnBase,options.seajs_src);
+                });
+            });
+        } else {
             grunt.file.write(mapFileSrc, code);
             var mapFileMd5Name = md5File(mapFileSrc);
             grunt.log.writeln('map file for md5：', mapFileMd5Name);
 
             this.files.forEach(function(filePair) {
                 filePair.src.forEach(function(file) {
-                    appendMapFileToView(file, mapFileMd5Name);
-                });
-            });
-        } else {
-            this.files.forEach(function(filePair) {
-                filePair.src.forEach(function(file) {
-                    appendMapSourceToView(file, code);
+                    appendMapFileToView(file, mapFileMd5Name,options.injectSea,options.cdnBase,options.seajs_src);
                 });
             });
         }
@@ -58,36 +60,73 @@ module.exports = function(grunt) {
         return newName;
     }
 
-    function appendMapSourceToView(viewSrc, source) {
+    function appendMapSourceToView(viewSrc, source,injectSea,cdnBase,baseDir) {
         var code = grunt.file.read(viewSrc);
 
-        var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
         }
-        var seaScript = m[0];
+        var placeholder = m[0];
+        var seaScript = placeholder;
         var fetchScript = '<script>' + source + '</script>';
-        code = code.replace(seaScript, seaScript + '\n' + fetchScript);
+        if(injectSea === true){
+            var seaScriptSource = appendSeaJSFileToView(seaScript,cdnBase,baseDir);
+            if(seaScriptSource){
+                seaScript = '<script>' + seaScriptSource + '</script>';
+            }
+        }
+        code = code.replace(placeholder, seaScript + '\n' + fetchScript);
 
         grunt.file.write(viewSrc, code);
         grunt.log.writeln('append fetch source to：', viewSrc);
     }
 
-    function appendMapFileToView(viewSrc, mapFileName) {
+    function appendMapFileToView(viewSrc, mapFileName,injectSea,cdnBase,baseDir) {
         var code = grunt.file.read(viewSrc);
 
-        var seajsReg = /<script.*\/(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
         }
-        var seaScript = m[0];
+        var placeholder = m[0];
+        var seaScript = placeholder;
         var fetchScript = seaScript.replace(m[1], mapFileName);
-        code = code.replace(seaScript, seaScript + '\n' + fetchScript);
+        if(injectSea === true){
+            var seaScriptSource = appendSeaJSFileToView(seaScript,cdnBase,baseDir);
+            if(seaScriptSource){
+                seaScript = '<script>' + seaScriptSource + '</script>';
+            }
+        }
+        code = code.replace(placeholder, seaScript + '\n' + fetchScript);
 
         grunt.file.write(viewSrc, code);
         grunt.log.writeln('append fetch file to：', viewSrc);
+    }
+
+    function appendSeaJSFileToView(seaScript,cdnBase,baseDir) {
+
+        var seajsReg = /src=(['"])([^'"]*)\1/i;
+        var m = seaScript.match(seajsReg);
+        var seaScript = '';
+        if (!m) {
+            return;
+        }
+        var seaScriptSrc = m[2];//.substr(baseDir.length);
+        if(seaScriptSrc.search(cdnBase) !== -1 ){
+            seaScriptSrc = seaScriptSrc.replace(cdnBase,'');
+        }
+        //if(seaScriptSrc.search(baseDir) == -1 ){
+            seaScriptSrc = path.join(baseDir , seaScriptSrc);
+        //}
+        grunt.log.writeln('------seajs file: ', seaScriptSrc);
+        if(grunt.file.exists(seaScriptSrc)){
+            seaScript = grunt.file.read(seaScriptSrc);
+        }
+
+        return seaScript;
     }
 
     function createMapFile(baseDir) {
@@ -167,7 +206,8 @@ module.exports = function(grunt) {
             return resultMap;
         }
         function createMapCode(concFilesMath) {
-            var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
+            //var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
+            var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tvar mod=data.uri.replace(seajs.data.base,"");\n' + '\tdata.requestUri = data.uri.replace(mod, cfm[mod]);\n'  + '});';
             var code = FETCH_TEMPLATE.replace('concFilesMath', JSON.stringify(concFilesMath));
             return code;
         }
