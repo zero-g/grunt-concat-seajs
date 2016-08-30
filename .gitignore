@@ -3,3 +3,5 @@ npm-debug.log
 tmp
 .idea/
 .gitignore
+.DS_Store
+test/fixtures/.DS_Store

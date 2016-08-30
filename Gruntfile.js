@@ -7,9 +7,11 @@
  */
 
 'use strict';
-var config = {
+var now = new Date(),
+    config = {
       srcDir : 'test/fixtures/src',
-      releaseDir : 'test/fixtures/dist'
+      releaseDir : 'test/fixtures/dist',
+      date: '' + now.getFullYear() + (now.getMonth() + 1)
     },
     path = require('path');
 module.exports = function(grunt) {
@@ -43,6 +45,24 @@ module.exports = function(grunt) {
       }
     },
 
+
+    template: {
+      options: {
+        data: {
+          staticBase: '//s.geilicdn.com/shop/' + config.date
+        }
+      },
+      main: {
+        files: [{
+          expand: true,
+          cwd: config.releaseDir,
+          src: ['**/*.html'],
+          dest: config.releaseDir
+        }]
+      }
+
+    },
+
     // generate any new files which is md5 named.
     filerev: {
       main: {
@@ -60,6 +80,7 @@ module.exports = function(grunt) {
       options: {
         baseDir: config.releaseDir + '/',
         seajs_src: config.releaseDir + '/',
+        cdnBase: '//s.geilicdn.com/' + config.date,
         //map_file_name: 'fetch.js',
         injectFetch: true, //选择生成js文件，还是嵌入到html
         injectSea: true //选择生成js文件，还是嵌入到html
@@ -88,11 +109,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-template');
   grunt.loadNpmTasks('grunt-filerev');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'copy', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
+  grunt.registerTask('test', ['clean', 'copy', 'template', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
