@@ -93,5 +93,5 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-- 2016 8.30 v1.0.12 1.Fix get filerev map bug, 2.Add inject fetch/seajs file into pages feature.
-- 2016 9.2 v1.1.0 1.Fix no concat file fetch error bug. 2.Update readme.md.
+- 2016 8.30 -v1.0.12 -Fix get filerev map bug, and add inject fetch/seajs file into pages feature.
+- 2016 9.2 -v1.1.0 -Fix no concat file fetch error bug,and Update readme.md.
