@@ -34,28 +34,56 @@ grunt.initConfig({
 
 ### Options
 
-#### options.view_src
+#### baseDir
 Type: `String`
 
-The path of the view which contain seajs file is used to insert the concat math file of seajs.
+Building the project then generate the destination path, fllowing this path is to find the file content for injecting the aim files.
 
-#### options.seajs_src
+#### seajs_src
 Type: `String`
 
 The path of seajs file is used to be the path of the match file.
 
+#### map_file_name
+Type: `String`
+Default: `fetch.js`
+
+This is the seajs fetch file name.
+
+#### cdnBase
+Type: `String`
+
+If you static source put on the cdn service before you publish your project,you should config this param.
+
+#### injectFetch
+Type: `Boolean`
+Default: `false`
+
+Turns on injectFetch of the generated source code. the seajs fetch file will inject to the views which you config.
+
+#### injectSea
+Type: `Boolean`
+Default: `false`
+
+Turns on injectFetch of the generated source code. the seajs file will inject to the views which you config.
+
+
 ### Usage Examples
 
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. 
-So if the `concat` config concat the files and `filerev` make files md5, the generated result would be genarate a match file in `seajs_src`. At the same time, the match file would be insert to the `view_src`.  
+In this example, custom options are used to do something else with whatever else.
+So if the `concat` config concat the files and `filerev` make files md5, the generated result would be genarate a match file in `seajs_src`. At the same time, the match file would be insert to the `view_src`.
 
 ```js
 grunt.initConfig({
   concat_seajs: {
     options: {
-          seajs_src: 'js/lib/',
-          view_src: '../views/index.php'
+            map_file_name: 'fetch.js',
+            seajs_src: '',
+            cdnBase: 'http://s.geilicdn.com/',
+            baseDir: 'dist/',
+            injectFetch: true,
+            injectSea: true
     }
   },
 });
@@ -65,4 +93,5 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+- 2016 8.30 -v1.0.12 -Fix get filerev map bug, and add inject fetch/seajs file into pages feature.
+- 2016 9.2 -v1.1.0 -Fix no concat file fetch error bug,and Update readme.md.

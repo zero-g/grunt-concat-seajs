@@ -49,7 +49,7 @@ module.exports = function(grunt) {
     template: {
       options: {
         data: {
-          staticBase: '//s.geilicdn.com/shop/' + config.date
+          staticBase: '//s.geilicdn.com/' + config.date
         }
       },
       main: {
