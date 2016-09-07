@@ -168,34 +168,48 @@ module.exports = function(grunt) {
 
             if (!summary) {
                 grunt.log.write('没有进行md5');
-            } else if (!concFiles) {
-                //如果没有合并文件，那么md5的作为match
-                concFilesMath = grunt.filerev.summary;
             } else {
-                for (var src in summary) {
-                    if (concFiles[src]) {
-                        //如果是合并的文件，合并的文件，不被引用，不需要加入math
-                        continue;
-                    }
 
-                    var absuluteSrc = path.resolve(src);
-                    if (concFilesMath[src]) {
-                        //如果该文件是被合并的文件，则修改合并文件的url
-                        concFilesMath[src] = summary[concFilesMath[src]];
-                    }
-                    if (concFilesMath[absuluteSrc]) {
-                        concFilesMath[src] = summary[concFilesMath[absuluteSrc]];
-                        delete concFilesMath[absuluteSrc];
-                    } else {
-                        if(/\.js$/.test(src)) {
+                if (!concFiles) {
+                    //如果没有合并文件，那么md5的作为match
+                    concFilesMath = summary;
+                } else {
+                    for (var src in summary) {
+                        if (concFiles[src]) {
+                            //如果是合并的文件，合并的文件，不被引用，不需要加入math
+                            continue;
+                        }
+
+                        var absuluteSrc = path.resolve(src);
+                        if (concFilesMath[src]) {
+                            //如果该文件是被合并的文件，则修改合并文件的url
+                            concFilesMath[src] = summary[concFilesMath[src]];
+                        }
+                        if (concFilesMath[absuluteSrc]) {
+                            concFilesMath[src] = summary[concFilesMath[absuluteSrc]];
+                            delete concFilesMath[absuluteSrc];
+                        } else {
                             concFilesMath[src] = summary[src];
                         }
                     }
                 }
             }
+            var concFilesMath = mapFilter(concFilesMath);
 
             return concFilesMath;
         }
+
+        function mapFilter(map){
+            var reg = /\.(jpg|bmp|gif|png|map|css|eot|svg|ttf|woff)$/i,
+                newMap = {};
+            for (var src in map) {
+                if(!reg.test(src)){
+                    newMap[src] = map[src];
+                }
+            }
+            return newMap;
+        }
+
         function resolvePath(concFilesMath, baseDir) {
             var resultMap = {};
             baseDir = path.normalize(baseDir);
