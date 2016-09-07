@@ -93,6 +93,7 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-- 2016 9.7 -v1.0.14 -Add fethc map filter ,static files do not appear to the fetch map. eg: .jpg|.bmp|.gif|.png|.map|.css|.eot|.svg|.ttf|.woff
-- 2016 9.2 -v1.0.13 -Fix no concat file fetch error bug,and Update readme.md.
-- 2016 8.30 -v1.0.12 -Fix get filerev map bug, and add inject fetch/seajs file into pages feature.
+- 2016 9.7   -v1.0.14   -Add fethc map filter ,static files do not appear to the fetch map.
+  eg: .jpg|.bmp|.gif|.png|.map|.css|.eot|.svg|.ttf|.woff
+- 2016 9.2   -v1.0.13   -Fix no concat file fetch error bug,and Update readme.md.
+- 2016 8.30   -v1.0.12   -Fix get filerev map bug, and add inject fetch/seajs file into pages feature.
