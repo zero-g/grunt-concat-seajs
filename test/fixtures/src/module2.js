@@ -8,6 +8,7 @@ define(function(require, exports, module) {
         textNode = document.createTextNode('module2 loaded.');
 
     divNode.appendChild(textNode);
+    divNode.setAttribute('id','module2');
     container.appendChild(divNode);
     console.log('loaded!');
 });
