@@ -45,6 +45,19 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {
+      main: {
+        files: {
+          //公用lib类库(大部分第三方)
+          'test/fixtures/dist/module.min.css': [
+            'test/fixtures/srcmodule1.css',
+            'test/fixtures/srcmodule2.css',
+            'test/fixtures/srcmodule3.css',
+            'test/fixtures/srcmodule4.css'
+          ]
+        }
+      }
+    },
 
     template: {
       options: {
@@ -109,12 +122,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-template');
   grunt.loadNpmTasks('grunt-filerev');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'copy', 'template', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
+  grunt.registerTask('test', ['clean', 'copy', 'template', 'concat', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
