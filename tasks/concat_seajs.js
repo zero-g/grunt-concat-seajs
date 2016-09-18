@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                 var dest = target.dest;
                 var files = target.files;
                 if(dest && files.length){
-                    injectFiles(dest,files);
+                    injectFiles(dest,files,options);
                 }
             })
         }
@@ -85,9 +85,9 @@ module.exports = function(grunt) {
      * @param files
      * 说明:
      *      1.js必须插入到sea的紧下面,否则会有问题
-     *      2.css插入到</head>前面
+     *      2.css插入到</head>前面,并且要删除掉该页面原有的css(即将插入的)引用
      */
-    function injectFiles(viewSrc,files){
+    function injectFiles(viewSrc,files,options){
         var filePath = path.resolve(viewSrc);
         if(!grunt.file.exists(filePath)){
             return;
@@ -132,10 +132,26 @@ module.exports = function(grunt) {
                     }
                     var placeholder = m[0];
                     var injectCode = rule.prefix + source + rule.postfix;
-                    if(type == 'js'){
-                        code = code.replace(placeholder, placeholder + injectCode);
-                    }else{
+                    if(type == 'css'){
+                        //注入css
                         code = code.replace(placeholder, injectCode + placeholder);
+
+                        //找到页面中原路引入的<link>标签 并将其去掉
+                        var linkTagRge = /<link.*href=(['"])([^'"]*)(\1)[^<]*(<\/link>)*/ig;
+                        var result;
+                        while ((result = linkTagRge.exec(code)) != null) {
+                            var cssSourceLink = result[2];
+                            if(cssSourceLink.search(options.cdnBase) !== -1 ){
+                                cssSourceLink = cssSourceLink.replace(options.cdnBase,'');
+                            }
+                            if(file.search(cssSourceLink) !== -1 ){
+                                code = code.replace(result[0], '');
+                                break;
+                            }
+                        }
+                    }else{
+                        //注入js脚本 将seajs放置在注入js脚本上方
+                        code = code.replace(placeholder, placeholder + injectCode);
                     }
 
                     grunt.file.write(viewSrc, code);
