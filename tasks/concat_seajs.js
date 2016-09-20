@@ -20,7 +20,6 @@ module.exports = function(grunt) {
     /**
      * 注册 concat_seajs 任务
      */
-
     grunt.registerMultiTask('concat_seajs', profile, function() {
         var options = this.options({
             map_file_name: 'fetch',
@@ -170,6 +169,11 @@ module.exports = function(grunt) {
         //grunt.file.read(viewSrc);
     }
 
+    /**
+     * 生成md5文件名
+     * @param file
+     * @returns {string}
+     */
     function md5File(file) {
         var MD5_LENGTH = 8; //set hash length, todo be the filerev md5 length config
         var hash = crypto.createHash('md5').update(fs.readFileSync(file)).digest('hex');
@@ -286,6 +290,12 @@ module.exports = function(grunt) {
         return seaScript;
     }
 
+    /**
+     * 生成 fetch 映射表.
+     * @param baseDir
+     * @param options
+     * @returns {{default: {}}}
+     */
     function createMapFile(baseDir, options) {
 
         var codeMap = {
@@ -316,11 +326,6 @@ module.exports = function(grunt) {
                 };
             })
         }
-
-
-
-
-
         return codeMap;
 
         /**
@@ -329,8 +334,6 @@ module.exports = function(grunt) {
          * @param dest
          * @param code
          */
-
-
         function getConcatFilesMatch(map) {
             var concFilesMath = {}; //文件合并到哪个文件
             var concFiles = null; //合并的文件
@@ -434,6 +437,11 @@ module.exports = function(grunt) {
             return concFilesMath;
         }
 
+        /**
+         * 对fetch 映射表做筛选, 去除掉.jpg|.bmp|.gif|.png|.map|.css|.eot|.svg|.ttf|.woff 格式文件映射
+         * @param map
+         * @returns {{}}
+         */
         function typeFilter(map){
             var reg = /\.(jpg|bmp|gif|png|map|css|eot|svg|ttf|woff)$/i,
                 newMap = {};
@@ -445,6 +453,12 @@ module.exports = function(grunt) {
             return newMap;
         }
 
+        /**
+         * 对fetch 映射表做路径处理将绝对地址替换成相对地址
+         * @param concFilesMath
+         * @param baseDir
+         * @returns {{}}
+         */
         function resolvePath(concFilesMath, baseDir) {
             var resultMap = {};
             baseDir = path.normalize(baseDir);
@@ -454,6 +468,12 @@ module.exports = function(grunt) {
             }
             return resultMap;
         }
+
+        /**
+         * 生成fetch 映射表代码字符串
+         * @param concFilesMath
+         * @returns {string}
+         */
         function createMapCode(concFilesMath) {
             //var FETCH_TEMPLATE = 'seajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tfor(var beConfFile in cfm) {\n' + '\t\tdata.requestUri = data.uri.replace(beConfFile, cfm[beConfFile]);\n' + '\t\tif(data.uri !== data.requestUri) { break;}\n' + '\t};\n' + '});';
             var FETCH_TEMPLATE = '\nseajs.on("fetch", function(data) {\n' + '\tvar cfm = concFilesMath;\n' + '\tvar mod=data.uri.replace(seajs.data.base,"");\n' + '\tdata.requestUri = data.uri;\n' + '\tif(cfm[mod]){\n' + '\t\tdata.requestUri = data.uri.replace(mod, cfm[mod]);\n' + '\t}\n'   + '\t});\n';

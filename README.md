@@ -67,6 +67,13 @@ Default: `false`
 
 Turns on injectFetch of the generated source code. the seajs file will inject to the views which you config.
 
+#### map
+Type: `Array`
+Default: `[]`
+Param: `dest` , `files`
+
+If you want to inject different js/css for individual pages, you can use this property,Any page can be configured individually.
+
 
 ### Usage Examples
 
@@ -83,7 +90,14 @@ grunt.initConfig({
             cdnBase: 'http://s.geilicdn.com/',
             baseDir: 'dist/',
             injectFetch: true,
-            injectSea: true
+            injectSea: true,
+            map: [{
+                      'dest': path.join(config.releaseDir ,'pages/index.html'),
+                      'files': [
+                          path.join(config.releaseDir , 'js/common.min.js'),
+                          path.join(config.releaseDir , 'js/index.min.js')
+                      ]
+                  }]
     }
   },
 });
@@ -93,7 +107,8 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-- 2016 9.7   -v1.0.14   -Add fethc map filter ,static files do not appear to the fetch map.
+- 2016 9.20   -v1.0.16   -Support part of file inject to the pages & process the fetch map.
+- 2016 9.7   -v1.0.15   -Add fethc map filter ,static files do not appear to the fetch map.
   eg: .jpg|.bmp|.gif|.png|.map|.css|.eot|.svg|.ttf|.woff
 - 2016 9.2   -v1.0.13   -Fix no concat file fetch error bug,and Update readme.md.
 - 2016 8.30   -v1.0.12   -Fix get filerev map bug, and add inject fetch/seajs file into pages feature.
