@@ -193,7 +193,7 @@ module.exports = function(grunt) {
         var code = grunt.file.read(viewSrc);
         var injectSea = options.injectSea;
         var cdnBase = options.cdnBase;
-        var baseDir = options.seajs_src;
+        var baseDir = options.baseDir;
         var source = codeMap['default']['code'];
         var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
@@ -234,7 +234,7 @@ module.exports = function(grunt) {
         var code = grunt.file.read(viewSrc),
             injectSea = options.injectSea,
             cdnBase = options.cdnBase,
-            baseDir = options.seajs_src;
+            baseDir = options.baseDir;
 
         var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
         var m = code.match(seajsReg);
