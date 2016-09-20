@@ -150,11 +150,21 @@ module.exports = function(grunt) {
             'dest': path.join(config.releaseDir ,'index.html'),
             'files': [
                path.join(config.releaseDir , 'index.min.js'),//this file must be exist.
-               //path.join(config.releaseDir , 'index.min.css'),
-               path.join(config.releaseDir , 'module1.css'),
-               path.join(config.releaseDir , 'module2.css'),
-               path.join(config.releaseDir , 'module3.css'),
-               path.join(config.releaseDir , 'module4.css')
+               path.join(config.releaseDir , 'index.min.css')
+            ]
+          },
+          {
+            'dest': path.join(config.releaseDir ,'index2.html'),
+            'files': [
+              path.join(config.releaseDir , 'index.js'),//this file must be exist.
+              path.join(config.releaseDir , 'module1.js'),//this file must be exist.
+              path.join(config.releaseDir , 'module2.js'),//this file must be exist.
+              path.join(config.releaseDir , 'module3.js'),//this file must be exist.
+              path.join(config.releaseDir , 'module4.js'),//this file must be exist.
+              path.join(config.releaseDir , 'module1.css'),
+              path.join(config.releaseDir , 'module2.css'),
+              path.join(config.releaseDir , 'module3.css'),
+              path.join(config.releaseDir , 'module4.css')
             ]
           }
         ]

@@ -97,7 +97,7 @@ module.exports = function(grunt) {
             {
                 name: 'js',
                 type: /\.js/i,
-                position: /<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
+                position: /<script.*(data-seajs-config)[^<]*<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
                 prefix: '<script type="text/javascript">',
                 postfix: '</script>'
             },
@@ -149,9 +149,14 @@ module.exports = function(grunt) {
                                 break;
                             }
                         }
-                    }else{
+                    }else if(type == 'js'){
                         //注入js脚本 将seajs放置在注入js脚本上方
-                        code = code.replace(placeholder, placeholder + injectCode);
+                        code = code.replace(placeholder, function(match){
+                            return match +'\n' + injectCode + '\n';
+                        });
+
+                        //注入js脚本 需在 seajs.config声明base之后...
+                        //code = code.replace(placeholder, injectCode + placeholder);
                     }
 
                     grunt.file.write(viewSrc, code);
@@ -271,7 +276,7 @@ module.exports = function(grunt) {
             seaScriptSrc = seaScriptSrc.replace(cdnBase,'');
         }
         //if(seaScriptSrc.search(baseDir) == -1 ){
-            seaScriptSrc = path.join(baseDir , seaScriptSrc);
+        seaScriptSrc = path.join(baseDir , seaScriptSrc);
         //}
         grunt.log.writeln('------seajs file: ', seaScriptSrc);
         if(grunt.file.exists(seaScriptSrc)){
