@@ -368,7 +368,7 @@ module.exports = function(grunt) {
                             if (!tempFileDir) {
                                 console.log('待合并的文件', beConfFile, '找不到');
                             } else {
-                                beConfFile = tempFileDir;
+                                //beConfFile = tempFileDir;
                                 concFilesMath[beConfFile] = concFile;
                                 console.log(concFilesMath);
                                 concFiles[concFile] = true;
