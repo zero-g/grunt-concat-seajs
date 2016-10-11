@@ -1,7 +1,7 @@
 {
   "name": "grunt-concat-seajs",
   "description": "If you combine a seajs project file, this task can be used with the seajs module to load the corresponding",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "homepage": "https://github.com/zero-g/grunt-concat-seajs",
   "author": {
     "name": "zero-g",

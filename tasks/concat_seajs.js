@@ -363,16 +363,30 @@ module.exports = function(grunt) {
                             continue;
                         }
                         f[concFile].forEach(function(beConfFile) {
-                            var tempFileDir = findup(beConfFile, {cwd: './'});
+                            var tempFileDir = findup(beConfFile, {cwd: './'}),
+                                isContinueInner = true;
                             console.log(tempFileDir);
                             if (!tempFileDir) {
                                 console.log('待合并的文件', beConfFile, '找不到');
-                            } else {
-                                //beConfFile = tempFileDir;
-                                concFilesMath[beConfFile] = concFile;
-                                console.log(concFilesMath);
-                                concFiles[concFile] = true;
+                                return;
                             }
+                            if(map && map.files){
+                                map.files.forEach(function(targe){
+                                    if(beConfFile == targe){
+                                        unConcFiles.push(beConfFile);
+                                        isContinueInner = false;
+                                        return;
+                                    }
+                                })
+                            }
+                            if(!isContinueInner){
+                                return;
+                            }
+                            //beConfFile = tempFileDir;
+                            concFilesMath[beConfFile] = concFile;
+                            console.log(concFilesMath);
+                            concFiles[concFile] = true;
+
                         });
                     }
                 }
