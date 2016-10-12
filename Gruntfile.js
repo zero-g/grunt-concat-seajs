@@ -58,8 +58,7 @@ module.exports = function(grunt) {
             'test/fixtures/dist/module1.js',
             'test/fixtures/dist/module2.js',
             'test/fixtures/dist/module3.js',
-            'test/fixtures/dist/module4.js',
-            'test/fixtures/dist/index.js'
+            'test/fixtures/dist/module4.js'
           ]
         }
       }
@@ -149,6 +148,7 @@ module.exports = function(grunt) {
           {
             'dest': path.join(config.releaseDir ,'index.html'),
             'files': [
+               path.join(config.releaseDir , 'index.js'),//this file must be exist.
                path.join(config.releaseDir , 'index.min.js'),//this file must be exist.
                path.join(config.releaseDir , 'index.min.css')
             ]

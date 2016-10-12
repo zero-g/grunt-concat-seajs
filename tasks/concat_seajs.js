@@ -351,8 +351,8 @@ module.exports = function(grunt) {
                         var isContinue = true;
                         //如果concat里面的合并目标文件和map里面配置的文件重合 那么则不需要将concat源文件加入到fetch map中
                         if(map && map.files){
-                            map.files.forEach(function(targe){
-                                if(concFile == targe){
+                            map.files.forEach(function(target){
+                                if(concFile == target){
                                     isContinue = false;
                                     unConcFiles = unConcFiles.concat(f[concFile]);
                                     return;
@@ -362,17 +362,19 @@ module.exports = function(grunt) {
                         if(!isContinue){
                             continue;
                         }
-                        f[concFile].forEach(function(beConfFile) {
-                            var tempFileDir = findup(beConfFile, {cwd: './'}),
+                        for(var i = 0; i<f[concFile].length; i++){
+                            var beConfFile = f[concFile][i],
+                                tempFileDir = findup(beConfFile, {cwd: './'}),
                                 isContinueInner = true;
                             console.log(tempFileDir);
                             if (!tempFileDir) {
                                 console.log('待合并的文件', beConfFile, '找不到');
                                 return;
                             }
+                            //如果concat里面的合并 被合并的文件和map里面配置的文件重合 那么则不需要将concat源文件加入到fetch map中
                             if(map && map.files){
-                                map.files.forEach(function(targe){
-                                    if(beConfFile == targe){
+                                map.files.forEach(function(target){
+                                    if(beConfFile == target){
                                         unConcFiles.push(beConfFile);
                                         isContinueInner = false;
                                         return;
@@ -380,14 +382,13 @@ module.exports = function(grunt) {
                                 })
                             }
                             if(!isContinueInner){
-                                return;
+                                continue;
                             }
                             //beConfFile = tempFileDir;
                             concFilesMath[beConfFile] = concFile;
                             console.log(concFilesMath);
                             concFiles[concFile] = true;
-
-                        });
+                        }
                     }
                 }
             }
@@ -431,18 +432,7 @@ module.exports = function(grunt) {
                             continue;
                         }
 
-
-                        var absuluteSrc = path.resolve(src);
-                        if (concFilesMath[src]) {
-                            //如果该文件是被合并的文件，则修改合并文件的url
-                            concFilesMath[src] = summary[concFilesMath[src]];
-                        }
-                        if (concFilesMath[absuluteSrc]) {
-                            concFilesMath[src] = summary[concFilesMath[absuluteSrc]];
-                            delete concFilesMath[absuluteSrc];
-                        } else {
-                            concFilesMath[src] = summary[src];
-                        }
+                        concFilesMath[src] = summary[src];
                     }
                 }
             }
