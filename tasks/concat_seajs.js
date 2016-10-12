@@ -432,7 +432,7 @@ module.exports = function(grunt) {
                             continue;
                         }
 
-                        concFilesMath[src] = summary[src];
+                        concFilesMath[src] = summary[concFilesMath[src]]? summary[concFilesMath[src]]: summary[src];
                     }
                 }
             }
