@@ -126,7 +126,7 @@ You have to separate the seajs.config part and the seajs.use part to two differe
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-- 2016 11.22   -v1.0.20   -Bug fixed. use htmlmin plugin's bug.
+- 2016 11.22   -v1.0.20   -Bug fixed. Fix problems caused by htmlmin plugin.
 - 2016 10.11   -v1.0.19   -Bug fixed. Fix fetch map absolute path bug.
 - 2016 9.20   -v1.0.16   -Support part of file inject to the pages & process the fetch map.
 - 2016 9.7   -v1.0.15   -Add fethc map filter ,static files do not appear to the fetch map.
