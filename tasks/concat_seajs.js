@@ -66,7 +66,7 @@ module.exports = function(grunt) {
                 grunt.file.write(mapFileName, codeMap[c].code); //todo: code数据格式已经变了 需要改后续逻辑
                 var mapFileMd5Name = md5File(mapFileName);
                 codeMap[c].md5Name = mapFileMd5Name;
-                grunt.log.writeln('map file for md5：', mapFileMd5Name);
+                //grunt.log.writeln('map file for md5：', mapFileMd5Name);
             }
             this.files.forEach(function(filePair) {
                 filePair.src.forEach(function(file) {
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
             {
                 name: 'js',
                 type: /\.js/i,
-                position: /<script.*(data-seajs-config)[^<]*<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
+                position: /<script.[^<]*?(data-seajs-config)+.*?<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
                 prefix: '<script type="text/javascript">',
                 postfix: '</script>'
             },
@@ -160,7 +160,7 @@ module.exports = function(grunt) {
 
                     grunt.file.write(viewSrc, code);
 
-                    grunt.log.writeln('---- append file to the view：', file);
+                    //grunt.log.writeln('---- append file to the view：', file);
                 }
             });
 
@@ -199,7 +199,7 @@ module.exports = function(grunt) {
         var cdnBase = options.cdnBase;
         var baseDir = options.baseDir;
         var source = codeMap['default']['code'];
-        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*?(sea.*?js).*?<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
@@ -224,7 +224,7 @@ module.exports = function(grunt) {
         code = code.replace(placeholder, seaScript + '\n' + fetchScript);
 
         grunt.file.write(viewSrc, code);
-        grunt.log.writeln('append fetch source to：', viewSrc);
+        //grunt.log.writeln('append fetch source to：', viewSrc);
     }
 
 
@@ -240,7 +240,7 @@ module.exports = function(grunt) {
             cdnBase = options.cdnBase,
             baseDir = options.baseDir;
 
-        var seajsReg = /<script.*(sea[^(js)]*js)[^<]*<\/script>/i;
+        var seajsReg = /<script.*?(sea.*?js).*?<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
@@ -257,7 +257,7 @@ module.exports = function(grunt) {
         code = code.replace(placeholder, seaScript + '\n' + fetchScript);
 
         grunt.file.write(viewSrc, code);
-        grunt.log.writeln('append fetch file to：', viewSrc);
+        //grunt.log.writeln('append fetch file to：', viewSrc);
     }
 
     /**
@@ -282,7 +282,7 @@ module.exports = function(grunt) {
         //if(seaScriptSrc.search(baseDir) == -1 ){
         seaScriptSrc = path.join(baseDir , seaScriptSrc);
         //}
-        grunt.log.writeln('------seajs file: ', seaScriptSrc);
+        //grunt.log.writeln('------seajs file: ', seaScriptSrc);
         if(grunt.file.exists(seaScriptSrc)){
             seaScript = grunt.file.read(seaScriptSrc);
         }
