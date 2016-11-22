@@ -102,6 +102,25 @@ grunt.initConfig({
   },
 });
 ```
+#### The most Important part
+This is a very critical step！Please pay attention to this step.
+It's will need you to do some simple configuration in your pages：
+You have to separate the seajs.config part and the seajs.use part to two different <script>. And ensure that <script> reference should be follow this order.
+
+```html
+<script src="js/base/sea.js"></script>
+<script type="text/javascript" data-seajs-config="true">
+    seajs.config({
+        base: '',
+        charset : 'utf-8'
+    });
+</script>
+<script type="text/javascript">
+    seajs.use('js/index',function(index){
+        index.init();
+        ...
+    });
+</script>```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
