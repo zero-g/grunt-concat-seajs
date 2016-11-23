@@ -152,7 +152,7 @@ module.exports = function(grunt) {
                path.join(config.releaseDir , 'index.min.js'),//this file must be exist.
                path.join(config.releaseDir , 'index.min.css')
             ]
-          },
+          }/*,
           {
             'dest': path.join(config.releaseDir ,'index2.html'),
             'files': [
@@ -166,7 +166,7 @@ module.exports = function(grunt) {
               path.join(config.releaseDir , 'module3.css'),
               path.join(config.releaseDir , 'module4.css')
             ]
-          }
+          }*/
         ]
       },
       main: {
@@ -177,7 +177,20 @@ module.exports = function(grunt) {
         }]
       }
     },
-
+    htmlmin: {
+      options: {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true
+      },
+      min: {
+        expand: true,
+        cwd: config.releaseDir,
+        src: ['**/*.html'],
+        dest: config.releaseDir
+      }
+    },
     // Unit tests.
     nodeunit: {
       tests: ['test/*_test.js']
@@ -196,11 +209,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-cmd-transport');
   grunt.loadNpmTasks('grunt-template');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-filerev');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'copy', 'template', 'transport', 'concat', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
+  grunt.registerTask('test', ['clean', 'copy', 'template', 'transport', 'concat', 'htmlmin:min', 'filerev', 'concat_seajs'/*, 'nodeunit'*/]);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

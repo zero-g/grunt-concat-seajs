@@ -96,7 +96,7 @@ module.exports = function(grunt) {
             {
                 name: 'js',
                 type: /\.js/i,
-                position: /<script.[^<]*?(data-seajs-config)+.*?<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
+                position: /<script.[^<]*?(data-seajs-config)[^<]*<\/script>/i,// /<script.*(data-seajs-config)[^<]*<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
                 prefix: '<script type="text/javascript">',
                 postfix: '</script>'
             },
