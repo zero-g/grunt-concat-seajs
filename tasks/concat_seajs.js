@@ -199,7 +199,7 @@ module.exports = function(grunt) {
         var cdnBase = options.cdnBase;
         var baseDir = options.baseDir;
         var source = codeMap['default']['code'];
-        var seajsReg = /<script[^<]*?src.*?(sea\.*?js).*?<\/script>/i;// /<script.*?(sea.*?js).*?<\/script>/i;
+        var seajsReg = /<script[^<]*?src.[^<]*?(sea.*?js).*?<\/script>/i;// /<script.*?(sea.*?js).*?<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
@@ -240,7 +240,7 @@ module.exports = function(grunt) {
             cdnBase = options.cdnBase,
             baseDir = options.baseDir;
 
-        var seajsReg = /<script[^<]*?src.*?(sea\.*?js).*?<\/script>/i;
+        var seajsReg = /<script[^<]*?src.[^<]*?(sea.*?js).*?<\/script>/i;
         var m = code.match(seajsReg);
         if (!m) {
             return;
