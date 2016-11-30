@@ -366,7 +366,7 @@ module.exports = function(grunt) {
                             var beConfFile = f[concFile][i],
                                 tempFileDir = findup(beConfFile, {cwd: './'}),
                                 isContinueInner = true;
-                            console.log(tempFileDir);
+                            //console.log(tempFileDir);
                             if (!tempFileDir) {
                                 console.log('待合并的文件', beConfFile, '找不到');
                                 return;
@@ -386,7 +386,7 @@ module.exports = function(grunt) {
                             }
                             //beConfFile = tempFileDir;
                             concFilesMath[beConfFile] = concFile;
-                            console.log(concFilesMath);
+                            //console.log(concFilesMath);
                             concFiles[concFile] = true;
                         }
                     }
