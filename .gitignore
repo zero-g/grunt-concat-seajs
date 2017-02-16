@@ -5,3 +5,4 @@ tmp
 .gitignore
 .DS_Store
 test/fixtures/.DS_Store
+test/fixtures/dist/
