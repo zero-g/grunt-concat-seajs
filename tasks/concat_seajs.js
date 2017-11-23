@@ -97,7 +97,7 @@ module.exports = function(grunt) {
                 name: 'js',
                 type: /\.js/i,
                 position: /<script.[^<]*?(data-seajs-config)[^<]*<\/script>/i,// /<script.*(data-seajs-config)[^<]*<\/script>/i,///<script.*(sea[^(js)]*js)[^<]*<\/script>/i,///\<\/body\>/i,
-                prefix: '<script type="text/javascript">',
+                prefix: '<script type="text/javascript" crossorigin="anonymous">',
                 postfix: '</script>'
             },
             {
@@ -214,7 +214,8 @@ module.exports = function(grunt) {
 
         var placeholder = m[0];
         var seaScript = placeholder;
-        var fetchScript = '<script type="text/javascript">' + source + '</script>';
+        //对fetch代码加允许跨域头，支持js报错上报获取详细信息 by abel 2017-11-23
+        var fetchScript = '<script type="text/javascript" crossorigin="anonymous">' + source + '</script>';
         if(injectSea == true){
             var seaScriptSource = appendSeaJSFileToView(seaScript,cdnBase,baseDir);
             if(seaScriptSource){
