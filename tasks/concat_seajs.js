@@ -214,6 +214,7 @@ module.exports = function(grunt) {
 
         var placeholder = m[0];
         var seaScript = placeholder;
+        
         //对fetch代码加允许跨域头，支持js报错上报获取详细信息 by abel 2017-11-23
         var fetchScript = '<script type="text/javascript" crossorigin="anonymous">' + source + '</script>';
         if(injectSea == true){
